@@ -1,2 +1,2 @@
-# dkkim6200.github.io
+# Kindlers
 Kindlers Volunteer Hour Management System
