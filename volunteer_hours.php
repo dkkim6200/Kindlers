@@ -119,7 +119,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 		<h2 class="page-header">Check My Volunteer Hour</h2>
 		<div class="content">
 			<span class="error-message"><?php echo $errorMessage; ?></span>
-	        <form class="form-volunteer-hour-lookup" action="/volunteer_hour.php" method="post">
+	        <form class="form-volunteer-hour-lookup" action="/volunteer_hours.php" method="post">
 	        	<div class="form-group">
                     <label for="first-name">First name</label>
                     <input name="first-name" class="form-control" placeholder="First name" required autofocus>
