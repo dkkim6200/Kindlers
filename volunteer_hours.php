@@ -19,14 +19,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     else
     {
-        $query = "SELECT SUM(start_time - end_time) as `diff` FROM sign_up WHERE user_key=? AND end_time IS NOT NULL";
+        $query = "SELECT SUM(TIMESTAMPDIFF(SECOND, start_time, end_time) / 3600.0) as `diff` FROM sign_up WHERE user_key=? AND end_time IS NOT NULL";
         $statement = $database->prepare($query);
         $statement->bind_param("i", $user->getKey());
         $statement->execute();
         $result = $statement->get_result();
 
         $row = $result->fetch_assoc();
-        $lookupMessage = "The total volunteer hours of " . $_POST["first-name"] . " " . $_POST["last-name"] . " is: <b>" . $row["diff"] . "</b>";
+        $lookupMessage = "The total volunteer hours of " . $_POST["first-name"] . " " . $_POST["last-name"] . " is: <b>" . number_format($row["diff"], 2, '.', '') . "</b>";
     }
 }
 
