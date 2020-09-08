@@ -85,8 +85,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/volunteer_events.php">Volunteer Events</a></li>
-                    <li><a href="/create_event.php">Create Event</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/logout.php">Log out</a></li>

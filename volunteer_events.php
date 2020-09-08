@@ -92,6 +92,7 @@ else {
                 <ul class="nav navbar-nav">
                     <li class="active"><a href="/volunteer_events.php">Volunteer Events</a></li>
                     <li><a href="/create_event.php">Create Event</a></li>
+                    <li><a href="/volunteer_hours.php">Check My Volunteer Hours</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/logout.php">Log out</a></li>

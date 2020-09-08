@@ -7,37 +7,31 @@ if (!isset($_SESSION["logged_in"]) || $_SESSION["logged_in"] == false) {
 }
 
 $errorMessage = "";
-$eventKey = $_GET["key"];
-
-$event = new Event($eventKey);
-if (!$event->exist) {
-	header("Location: /volunteer_events.php");
-}
-
-$eventTitle = $event->getTitle();
-$eventDate = $event->getDate();
-$eventDescription = $event->getDescription();
+$lookupMessage = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $database = new Database();
+    $database->connect();
+
     $user = new User($_POST["first-name"], $_POST["last-name"]);
-	if (!$user->exist) {
+    if (!$user->exist) {
 		$errorMessage = "This member does not exist.";
-	}
-	
-    if (isset($_POST["sign-in"])) {
-    	if (!$event->signIn($user)) {
-    		$errorMessage = "Please sign out from your last sign up.";
-    	}
     }
-    else if (isset($_POST["sign-out"])) {
-    	if (!$event->signOut($user)) {
-    		$errorMessage = "Please sign in first.";
-    	}
+    else
+    {
+        $query = "SELECT SUM(start_time - end_time) as `diff` FROM sign_up WHERE user_key=? AND end_time IS NOT NULL";
+        $statement = $database->prepare($query);
+        $statement->bind_param("i", $user->getKey());
+        $statement->execute();
+        $result = $statement->get_result();
+
+        $row = $result->fetch_assoc();
+        header("Location: /event.php?key=" . $row["diff"]);
+        $lookupMessage = "The total volunteer hours of " . $_POST["first-name"] . " " . $_POST["last-name"] . " is: <b>" . $row["diff"] . "</b>";
     }
 }
 
 ?>
-
 
 <html lang="en">
 <head>
@@ -61,6 +55,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
+    <link rel="stylesheet" href="/assets/bootstrap-datepicker/css/bootstrap-datepicker3.standalone.css" />
+    <script src="/assets/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
 
     <!-- =========== CSS =========== -->
     <style type="text/css">
@@ -82,14 +78,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             margin: 0 auto;
         }
 
-        .form-sign-up {
-        	max-width: 330px;
-        }
-
         .error-message {
             color: red;
         }
     </style>
+
+    <script type="text/javascript">
+        $('.datepicker').datepicker();
+    </script>
 
 </head>
 
@@ -109,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div id="navbar" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li><a href="/volunteer_events.php">Volunteer Events</a></li>
-                    <li><a href="/create_event.php">Create Event</a></li>
+                    <li class="active"><a href="/create_event.php">Create Event</a></li>
                     <li><a href="/volunteer_hours.php">Check My Volunteer Hours</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -120,26 +116,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </nav>
 
     <div class="container body">
-		<h2 class="page-header"><?php echo $eventTitle ?></h2>
+		<h2 class="page-header">Check My Volunteer Hour</h2>
 		<div class="content">
-			<label>Date</label>
-			<p><?php echo $eventDate ?></p>
-
-			<label>Description</label>
-			<p><?php echo $eventDescription ?></p>
-
-			<hr>
-
 			<span class="error-message"><?php echo $errorMessage; ?></span>
-	        <form class="form-sign-up" action="/event.php?key=<?php echo $_GET["key"] ?>" method="post">
+	        <form class="form-volunteer-hour-lookup" action="/volunteer_hour.php" method="post">
 	        	<div class="form-group">
-	        		<input name="first-name" class="form-control" placeholder="First name" required autofocus>
+                    <label for="first-name">First name</label>
+                    <input name="first-name" class="form-control" placeholder="First name" required autofocus>
+                    <label for="last-name">Last name</label>
 	            	<input name="last-name" class="form-control" placeholder="Last name" required>
 	            </div>
-
-	            <button name="sign-in" class="btn btn-lg btn-success" type="submit">Sign in</button>
-	            <button name="sign-out" class="btn btn-lg btn-danger" type="submit">Sign out</button>
+                <button class="btn btn-lg btn-success" type="submit">Lookup</button>
 	        </form>
+            <div class="lookup-message-wrapper">
+                <span class="lookup-message"><?php echo $lookupMessage; ?></span>
+            </div>
         </div>
     </div><!-- /.container -->
 
