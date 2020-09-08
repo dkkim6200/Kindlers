@@ -9,9 +9,10 @@ This project is a web application used to manage volunteer hours of the members 
 Login and sign-up system was implemented with PHP and MySQL, and AJAX to update the volunteer event status.
 
 To access a demo of the web app, go to http://34.69.192.172/login.php. The login credentials are:
-* *ID: test*
-* *PW: test*
-To sign in and sign out of events, use *"John Doe"* as the name for testing.
+* **ID: test**
+* **PW: test**
+
+To sign in and sign out of events, use **"John Doe"** as the name for testing.
 
 
 ## Pages
