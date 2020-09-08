@@ -26,7 +26,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $result = $statement->get_result();
 
         $row = $result->fetch_assoc();
-        header("Location: /event.php?key=" . $row["diff"]);
         $lookupMessage = "The total volunteer hours of " . $_POST["first-name"] . " " . $_POST["last-name"] . " is: <b>" . $row["diff"] . "</b>";
     }
 }
