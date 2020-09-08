@@ -102,6 +102,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <ul class="nav navbar-nav">
                     <li><a href="/volunteer_events.php">Volunteer Events</a></li>
                     <li class="active"><a href="/create_event.php">Create Event</a></li>
+                    <li><a href="/volunteer_hours.php">Check My Volunteer Hours</a></li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li><a href="/logout.php">Log out</a></li>
